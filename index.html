@@ -1,0 +1,494 @@
+# Aesthetic Food Photography Generator
+
+Simpan kode berikut dengan nama `index.html`, lalu buka di browser.
+
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aesthetic Food Studio</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #170907, #51251d, #24110e);
+    color: #fff5eb;
+    min-height: 100vh;
+}
+
+header {
+    padding: 25px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ffffff20;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: #e8a47c;
+}
+
+header p {
+    color: #d7b9a7;
+    font-size: 13px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 65px 25px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.tag {
+    color: #e8a47c;
+    letter-spacing: 4px;
+    font-size: 12px;
+    margin-bottom: 18px;
+}
+
+h1 {
+    font-size: clamp(35px, 6vw, 65px);
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+
+h1 span {
+    color: #e8a47c;
+    font-family: Georgia, serif;
+    font-style: italic;
+}
+
+.description {
+    color: #d6b9aa;
+    max-width: 530px;
+    margin: auto;
+    line-height: 1.8;
+}
+
+.studio {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 25px;
+}
+
+.panel {
+    background: #2b1512;
+    border: 1px solid #ffffff18;
+    border-radius: 18px;
+    padding: 28px;
+}
+
+.panel h2 {
+    font-size: 19px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #bda296;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    margin: 18px 0 9px;
+    color: #ead6ca;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #75483b;
+    border-radius: 9px;
+    background: #1c0d0b;
+    color: #fff5eb;
+    outline: none;
+    font: inherit;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #e8a47c;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    border-radius: 9px;
+    padding: 14px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.25s;
+}
+
+.generate {
+    width: 100%;
+    margin-top: 25px;
+    color: #28110c;
+    background: linear-gradient(100deg, #f2c5a5, #d78d67);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.preview {
+    min-height: 480px;
+    border-radius: 14px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background:
+      radial-gradient(ellipse at 50% 35%,
+        #8d4d37 0%, #55291f 40%,
+        #2c1511 72%, #170b09 100%);
+    overflow: hidden;
+    position: relative;
+}
+
+.preview::before {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f6b78b;
+    opacity: 0.08;
+    filter: blur(65px);
+    border-radius: 50%;
+}
+
+.preview-top, .food-area, .preview-bottom {
+    position: relative;
+    z-index: 1;
+}
+
+.preview-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #edc6ad;
+}
+
+.food-area {
+    text-align: center;
+    padding: 35px 0;
+}
+
+.food-icon {
+    font-size: clamp(75px, 10vw, 115px);
+    filter: drop-shadow(0 15px 15px #160604aa);
+    margin-bottom: 20px;
+}
+
+.food-name {
+    font-family: Georgia, serif;
+    font-size: 34px;
+    margin-bottom: 12px;
+    overflow-wrap: anywhere;
+}
+
+.food-caption {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #e9b99b;
+    text-transform: uppercase;
+}
+
+.preview-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    color: #e6c4b1;
+    font-size: 11px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.actions button {
+    flex: 1;
+    background: #43251e;
+    color: #f8e7db;
+    border: 1px solid #795043;
+}
+
+.prompt-box {
+    margin-top: 20px;
+    background: #1b0d0b;
+    border: 1px solid #684034;
+    border-radius: 12px;
+    padding: 17px;
+}
+
+.prompt-box h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: #e8a47c;
+}
+
+#promptText {
+    color: #d4b8a8;
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #a98a7c;
+    font-size: 12px;
+}
+
+@media (max-width: 760px) {
+    header {
+        padding: 20px;
+    }
+
+    header p {
+        display: none;
+    }
+
+    .container {
+        padding: 45px 18px;
+    }
+
+    .studio {
+        grid-template-columns: 1fr;
+    }
+
+    .preview {
+        min-height: 410px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">FOOD<span>STUDIO.</span></div>
+    <p>CREATIVE FOOD PHOTOGRAPHY</p>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <p class="tag">FOOD · ART · AESTHETIC</p>
+        <h1>Make Your Food<br><span>Look Delicious.</span></h1>
+        <p class="description">
+            Buat konsep fotografi makanan yang aesthetic,
+            dramatis, dan kekinian untuk konten media sosialmu.
+        </p>
+    </section>
+
+    <section class="studio">
+
+        <div class="panel">
+            <h2>Customize Your Shot</h2>
+            <p class="subtitle">Atur konsep foto makananmu.</p>
+
+            <label for="food">Nama makanan</label>
+            <input id="food" value="Seblak Pedas" placeholder="Contoh: Seblak Pedas">
+
+            <label for="style">Gaya fotografi</label>
+            <select id="style">
+                <option>Dark Moody</option>
+                <option>Luxury Restaurant</option>
+                <option>Minimalist Aesthetic</option>
+                <option>Street Food Viral</option>
+                <option>Cinematic Food</option>
+            </select>
+
+            <label for="lighting">Pencahayaan</label>
+            <select id="lighting">
+                <option>dramatic studio lighting</option>
+                <option>soft natural lighting</option>
+                <option>warm golden lighting</option>
+                <option>high contrast lighting</option>
+            </select>
+
+            <label for="background">Background</label>
+            <select id="background">
+                <option>mahogany gradient, deep reddish-brown</option>
+                <option>dark chocolate brown</option>
+                <option>warm beige studio</option>
+                <option>black luxury background</option>
+            </select>
+
+            <label for="details">Detail tambahan</label>
+            <textarea id="details"
+                placeholder="Contoh: cabai segar, uap hangat, keju meleleh"></textarea>
+
+            <button class="generate" onclick="generatePrompt()">
+                ✦ Generate Photography Concept
+            </button>
+        </div>
+
+        <div>
+            <div class="preview">
+                <div class="preview-top">
+                    <span>FOOD STUDIO / 001</span>
+                    <span>4K CONCEPT</span>
+                </div>
+
+                <div class="food-area">
+                    <div class="food-icon" id="foodIcon">🍜</div>
+                    <h2 class="food-name" id="previewName">
+                        Seblak Pedas
+                    </h2>
+                    <p class="food-caption" id="previewStyle">
+                        DARK MOODY · FOOD EDITION
+                    </p>
+                </div>
+
+                <div class="preview-bottom">
+                    <span>ART DIRECTION<br>FOOD PHOTOGRAPHY</span>
+                    <span>01 — 04K</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button onclick="copyPrompt()">▣ Copy Prompt</button>
+                <button onclick="downloadPrompt()">↓ Save .txt</button>
+            </div>
+
+            <div class="prompt-box">
+                <h3>YOUR AI IMAGE PROMPT</h3>
+                <p id="promptText">
+                    Aesthetic food photography of Seblak Pedas,
+                    center shot, dramatic lighting, mahogany background,
+                    modern trendy style, 4K resolution.
+                </p>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<footer>
+    © 2026 FOODSTUDIO — Made for creative food lovers.
+</footer>
+
+<script>
+const foodInput = document.getElementById("food");
+const styleInput = document.getElementById("style");
+const lightingInput = document.getElementById("lighting");
+const backgroundInput = document.getElementById("background");
+const detailsInput = document.getElementById("details");
+
+function getFoodIcon(food) {
+    const name = food.toLowerCase();
+
+    if (name.includes("seblak") || name.includes("mie") ||
+        name.includes("bakso") || name.includes("ramen")) return "🍜";
+
+    if (name.includes("burger")) return "🍔";
+    if (name.includes("pizza")) return "🍕";
+    if (name.includes("ayam")) return "🍗";
+    if (name.includes("kopi")) return "☕";
+    if (name.includes("sushi")) return "🍣";
+    if (name.includes("cake") || name.includes("kue")) return "🍰";
+    if (name.includes("es") || name.includes("jus")) return "🥤";
+    if (name.includes("kentang")) return "🍟";
+    if (name.includes("sate")) return "🍢";
+    if (name.includes("donat")) return "🍩";
+    if (name.includes("rendang")) return "🍛";
+    if (name.includes("martabak")) return "🥞";
+
+    return "🍽️";
+}
+
+function generatePrompt() {
+    const food = foodInput.value.trim() || "Delicious Food";
+    const style = styleInput.value;
+    const lighting = lightingInput.value;
+    const background = backgroundInput.value;
+    const details = detailsInput.value.trim();
+
+    const prompt =
+        `Aesthetic food photography of ${food}, centered hero shot, ` +
+        `${lighting}, smooth ${background} background, ` +
+        `${style} style, carefully styled food presentation, ` +
+        `appetizing textures, realistic details, shallow depth of field, ` +
+        `professional food styling, modern trendy teenage social media aesthetic, ` +
+        `editorial composition, ultra-detailed, 4K resolution` +
+        (details ? `, additional details: ${details}` : "") + ".";
+
+    document.getElementById("previewName").textContent = food;
+    document.getElementById("foodIcon").textContent = getFoodIcon(food);
+    document.getElementById("previewStyle").textContent =
+        style.toUpperCase() + " · FOOD EDITION";
+    document.getElementById("promptText").textContent = prompt;
+}
+
+async function copyPrompt() {
+    const text = document.getElementById("promptText").textContent;
+
+    try {
+        await navigator.clipboard.writeText(text);
+        alert("Prompt berhasil disalin!");
+    } catch {
+        alert("Salin prompt secara manual dari kotak prompt.");
+    }
+}
+
+function downloadPrompt() {
+    const text = document.getElementById("promptText").textContent;
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "food-photography-prompt.txt";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+foodInput.addEventListener("input", generatePrompt);
+styleInput.addEventListener("change", generatePrompt);
+lightingInput.addEventListener("change", generatePrompt);
+backgroundInput.addEventListener("change", generatePrompt);
+detailsInput.addEventListener("input", generatePrompt);
+
+generatePrompt();
+</script>
+
+</body>
+</html>
+```
+
